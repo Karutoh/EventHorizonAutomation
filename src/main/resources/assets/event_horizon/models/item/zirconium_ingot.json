@@ -1,0 +1,6 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "event_horizon:items/zirconium_ingot"
+	}
+}

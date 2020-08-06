@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "x",
+        "x",
+        "x"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "event_horizon:silver_ingot"
+        }
+    },
+    "result":
+    {
+        "item": "event_horizon:silver_rod",
+        "count": 1
+    }
+}

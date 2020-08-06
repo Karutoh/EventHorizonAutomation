@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:blasting",
+	"ingredient": {
+		"item": "event_horizon:copper_ore"
+	},
+	"result": "event_horizon:copper_ingot",
+	"experience": 0.0,
+	"cookingtime": 200
+}

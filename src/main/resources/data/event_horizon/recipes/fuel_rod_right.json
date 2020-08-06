@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "xy",
+        "xy",
+        "xy"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "event_horizon:zirconium_ingot"
+        },
+        "y":
+        {
+            "item": "event_horizon:uranium_pellette"
+        }
+    },
+    "result":
+    {
+        "item": "event_horizon:fuel_rod",
+        "count": 1
+    }
+}

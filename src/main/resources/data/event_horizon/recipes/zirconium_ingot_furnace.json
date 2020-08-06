@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:smelting",
+	"ingredient": {
+		"item": "event_horizon:aluminum_ore"
+	},
+	"result": "event_horizon:aluminum_ingot",
+	"experience": 0.0,
+	"cookingtime": 200
+}

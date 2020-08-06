@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "event_horizon:uranium_ore"
+    }
+  ],
+  "result":
+  {
+    "item": "event_horizon:uranium_powder",
+    "count": 1
+  }
+}

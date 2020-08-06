@@ -1,0 +1,22 @@
+{
+	"itemGroup.event_horizon": "Event Horizon",
+	"container.fission_reactor": "Fission Reactor",
+	"block.event_horizon.fission_reactor": "Fission Reactor",
+	"block.event_horizon.zirconium_ore": "Zirconium Ore",
+	"block.event_horizon.aluminum_ore": "Aluminum Ore",
+	"block.event_horizon.uranium_ore": "Uranium Ore",
+	"block.event_horizon.silver_ore": "Silver Ore",
+	"block.event_horizon.copper_ore": "Copper Ore",
+	"block.event_horizon.sulfur_ore": "Sulfur Ore",
+	"block.event_horizon.tin_ore": "Tin Ore",
+	"item.event_horizon.zirconium_ingot": "Zirconium Ingot",
+	"item.event_horizon.aluminum_ingot": "Aluminum Ingot",
+	"item.event_horizon.silver_ingot": "Silver Ingot",
+	"item.event_horizon.copper_ingot": "Copper Ingot",
+	"item.event_horizon.tin_ingot": "Tin Ingot",
+	"item.event_horizon.uranium_powder": "Uranium Powder",
+	"item.event_horizon.sulfur_powder": "Sulfur Powder",
+	"item.event_horizon.uranium_pellette": "Uranium Pellette",
+	"item.event_horizon.silver_rod": "Silver Rod",
+	"item.event_horizon.fuel_rod": "Fuel Rod"
+}
