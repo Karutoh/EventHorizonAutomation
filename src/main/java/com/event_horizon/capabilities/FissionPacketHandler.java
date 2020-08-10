@@ -1,12 +1,11 @@
 package com.event_horizon.capabilities;
 
 import com.event_horizon.EventHorizon;
-import com.event_horizon.items.FuelRod;
 import com.event_horizon.registries.CapabilityRegister;
+import com.event_horizon.registries.ItemRegister;
 import com.event_horizon.tile_entities.FissionReactorTileEntity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +15,8 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class FissionPacketHandler
 {
@@ -37,17 +38,19 @@ public class FissionPacketHandler
 			if (dir.getReceptionSide().isClient())
 			{
 				ctx.get().enqueueWork(() -> {
+					@SuppressWarnings("resource")
 					World world = Minecraft.getInstance().world;
 					
 					TileEntity tile = world.getTileEntity(packet.getBlockPos());
 					if (tile instanceof FissionReactorTileEntity)
 					{
-						ItemStack stack = ((FissionReactorTileEntity)tile).getItems().get(packet.getSlotNum());
-						if (stack.getItem() instanceof FuelRod)
+						IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new TypeNotPresentException("IItemHandler", null));
+						
+						ItemStack stack = itemHandler.getStackInSlot(packet.getSlotNum());
+						if (stack.getItem() == ItemRegister.FUEL_ROD.get())
 						{
-							IFission fission = stack.getCapability(CapabilityRegister.FISSION).orElse(null);
-							if (fission != null)
-								fission.decode(packet);
+							IFission fission = stack.getCapability(CapabilityRegister.FISSION).orElseThrow(() -> new TypeNotPresentException("IFission", null));
+							fission.decode(packet);
 						}
 					}
 				});

@@ -3,7 +3,6 @@ package com.event_horizon.gui.screen;
 import com.event_horizon.EventHorizon;
 import com.event_horizon.capabilities.IFission;
 import com.event_horizon.gui.container.FissionReactorContainer;
-import com.event_horizon.items.SilverRod;
 import com.event_horizon.registries.CapabilityRegister;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,10 +10,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 @OnlyIn(Dist.CLIENT)
 public class FissionReactorScreen extends ContainerScreen<FissionReactorContainer>
@@ -35,6 +37,10 @@ public class FissionReactorScreen extends ContainerScreen<FissionReactorContaine
 	{
 		renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		
+		if (hoveredSlot != null)
+			if (hoveredSlot.getStack().getItem() != Items.AIR)
+				renderTooltip(matrixStack, hoveredSlot.getStack(), mouseX, mouseY);
 	}
 	
 	@Override
@@ -52,8 +58,10 @@ public class FissionReactorScreen extends ContainerScreen<FissionReactorContaine
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y)
 	{
 		super.drawGuiContainerForegroundLayer(matrixStack, x, y);
-		
-		ItemStack fuel = this.getContainer().getTileEntity().getItems().get(2);
+
+		IItemHandler itemHandler = this.getContainer().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new TypeNotPresentException("IItemHandler", null));
+
+		ItemStack fuel = itemHandler.getStackInSlot(2);
 		IFission fission = fuel.getCapability(CapabilityRegister.FISSION).orElse(null);
 		if (fission == null)
 		{

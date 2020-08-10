@@ -1,6 +1,6 @@
 {
 	"itemGroup.event_horizon": "Event Horizon",
-	"container.fission_reactor": "Fission Reactor",
+	"screen.event_horizon.fission_reactor": "Fission Reactor",
 	"block.event_horizon.fission_reactor": "Fission Reactor",
 	"block.event_horizon.zirconium_ore": "Zirconium Ore",
 	"block.event_horizon.aluminum_ore": "Aluminum Ore",

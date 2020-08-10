@@ -1,60 +1,62 @@
 package com.event_horizon.gui.container;
 
-import java.util.Objects;
-
 import com.event_horizon.registries.BlockRegister;
 import com.event_horizon.registries.ContainerRegister;
 import com.event_horizon.tile_entities.FissionReactorTileEntity;
-import com.event_horizon.utils.FunctionalIntReferenceHolder;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class FissionReactorContainer extends Container
 {
-	private final IWorldPosCallable canInteractwithCallable;
-	private final FissionReactorTileEntity tile;
+	private FissionReactorTileEntity tileEntity;
+	@SuppressWarnings("unused")
+	private PlayerEntity playerEntity;
+	private IItemHandler playerInventory;
 	
-	public FissionReactorContainer(final int windowId, final PlayerInventory playerInventory, final FissionReactorTileEntity tile)
+	public FissionReactorContainer(int windowId, World world, BlockPos blockPos, PlayerInventory playerInventory, PlayerEntity playerEntity)
 	{
 		super(ContainerRegister.FISSION_REACTOR.get(), windowId);
-		canInteractwithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
-		this.tile = tile;
+		this.tileEntity = (FissionReactorTileEntity) world.getTileEntity(blockPos);
+		this.playerEntity = playerEntity;
+		this.playerInventory = new InvWrapper(playerInventory);
 		
-		//Control Rod Slot
-		addSlot(new Slot(tile, 0, 44, 17));
-		
-		//Neutron Source Slot
-		addSlot(new Slot(tile, 1, 8, 53));
-		
-		//Fuel Rod Slot
-		addSlot(new Slot(tile, 2, 44, 53));
+		if (tileEntity != null)
+		{
+			tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((capability) -> {
+				//Control Rod Slot
+				addSlot(new SlotItemHandler(capability, 0, 44, 17));
+				
+				//Neutron Source Slot
+				addSlot(new SlotItemHandler(capability, 1, 8, 53));
+				
+				//Fuel Rod Slot
+				addSlot(new SlotItemHandler(capability, 2, 44, 53));
+			});
+		}
 		
 		//Hotbar
 		for (int x = 0; x < 9; ++x)
-			addSlot(new Slot(playerInventory, x, 8 + x * 18, 142));
+			addSlot(new SlotItemHandler(this.playerInventory, x, 8 + x * 18, 142));
 		
 		//Player Inventory		
 		for (int x = 0; x < 9; ++x)
 			for (int y = 0; y < 3; ++y)
-				addSlot(new Slot(playerInventory, 9 + x * 3 + y, 8 + x * 18, 84 + y * 18));
-	}
-	
-	public FissionReactorContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data)
-	{
-		this(windowId, playerInventory, getTileEntity(playerInventory, data));
+				addSlot(new SlotItemHandler(this.playerInventory, 9 + x * 3 + y, 8 + x * 18, 84 + y * 18));
 	}
 
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
-		return isWithinUsableDistance(canInteractwithCallable, playerIn, BlockRegister.FISSION_REACTOR.get());
+		return isWithinUsableDistance(IWorldPosCallable.of(playerIn.world, tileEntity.getPos()), playerIn, BlockRegister.FISSION_REACTOR.get());
 	}
 	
 	@Override
@@ -85,18 +87,6 @@ public class FissionReactorContainer extends Container
 	
 	public FissionReactorTileEntity getTileEntity()
 	{
-		return tile;
-	}
-	
-	private static FissionReactorTileEntity getTileEntity(final PlayerInventory playerInventory, final PacketBuffer data)
-	{
-		Objects.requireNonNull(playerInventory, "Player inventory cannot be null.");
-		Objects.requireNonNull(data, "Data cannot be null.");
-		
-		final TileEntity tile = playerInventory.player.world.getTileEntity(data.readBlockPos());
-		if (tile instanceof FissionReactorTileEntity)
-			return (FissionReactorTileEntity)tile;
-		
-		throw new IllegalStateException("Tile entity is not correct. " + tile);
+		return tileEntity;
 	}
 }
