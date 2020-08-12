@@ -30,12 +30,12 @@ public class Fission implements IFission
 		
 		if (count > neutrons)
 		{
-			temperature += .001 * ((double)neutrons * 3.0);
+			temperature += .0001 * ((double)neutrons * 3.0);
 			neutrons *= 3;
 		}
 		else
 		{
-			temperature += .001 * ((double)count * 3.0);
+			temperature += .0001 * ((double)count * 3.0);
 			neutrons = (neutrons - count) + count * 3;
 		}
 	}

@@ -1,9 +1,15 @@
 package com.event_horizon;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.model.IUnbakedModel;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -11,6 +17,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import org.antlr.v4.runtime.atn.BasicState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +52,8 @@ public class EventHorizon
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onServerStarting);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::modelBake);
         
         TileEntityRegister.init();
         ContainerRegister.init();
@@ -71,8 +81,22 @@ public class EventHorizon
     {
     }
 
-    @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event)
     {
+    }
+    
+    public void modelBake(ModelBakeEvent event)
+    {
+    	try
+    	{
+			IUnbakedModel model = B3DLoader.INSTANCE.loadModel(new ResourceLocation(MOD_ID, "fission_reactor.b3d"));
+			model.
+			model.bakeModel(event.getModelLoader(), ModelLoader.defaultTextureGetter(), new BasicState(model.getDefaultState(), false), DefaultVertexFormats.ITEM);
+			
+		}
+    	catch (Exception e)
+    	{
+			e.printStackTrace();
+		}
     }
 }

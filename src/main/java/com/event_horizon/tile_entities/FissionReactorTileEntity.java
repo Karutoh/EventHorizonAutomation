@@ -10,6 +10,7 @@ import com.event_horizon.registries.TileEntityRegister;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -113,6 +114,21 @@ public class FissionReactorTileEntity extends TileEntity implements ITickableTil
             	
         		return super.insertItem(slot, stack, simulate);
             }
+            
+            @Override
+            public CompoundNBT serializeNBT()
+            {
+            	CompoundNBT nbt = new CompoundNBT();
+            	ItemStackHelper.saveAllItems(nbt, stacks);
+            	
+            	return nbt;
+            }
+            
+            @Override
+            public void deserializeNBT(CompoundNBT nbt)
+            {
+            	ItemStackHelper.loadAllItems(nbt, stacks);
+            }
         };
 	}
 	
@@ -138,8 +154,8 @@ public class FissionReactorTileEntity extends TileEntity implements ITickableTil
 	public void read(BlockState blockState, CompoundNBT nbt)
 	{
 		super.read(blockState, nbt);
-		
-		items.deserializeNBT(nbt);
+
+		items.deserializeNBT(nbt.getCompound("inv"));
 	}
 	
 	@Override

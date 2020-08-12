@@ -1,10 +1,15 @@
 package com.event_horizon.gui.container;
 
+import com.event_horizon.capabilities.FissionPacket;
+import com.event_horizon.capabilities.FissionPacketHandler;
+import com.event_horizon.capabilities.IFission;
 import com.event_horizon.registries.BlockRegister;
+import com.event_horizon.registries.CapabilityRegister;
 import com.event_horizon.registries.ContainerRegister;
 import com.event_horizon.tile_entities.FissionReactorTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -19,7 +24,6 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 public class FissionReactorContainer extends Container
 {
 	private FissionReactorTileEntity tileEntity;
-	@SuppressWarnings("unused")
 	private PlayerEntity playerEntity;
 	private IItemHandler playerInventory;
 	
@@ -52,6 +56,26 @@ public class FissionReactorContainer extends Container
 		for (int x = 0; x < 9; ++x)
 			for (int y = 0; y < 3; ++y)
 				addSlot(new SlotItemHandler(this.playerInventory, 9 + x * 3 + y, 8 + x * 18, 84 + y * 18));
+	}
+	
+	@Override
+	public void detectAndSendChanges()
+	{
+		IItemHandler itemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		if (itemHandler != null)
+		{
+			IFission fission = itemHandler.getStackInSlot(2).getCapability(CapabilityRegister.FISSION).orElse(null);
+			if (fission != null)
+			{	
+				if (fission.getNeutrons() > 0)
+				{
+					FissionPacket packet = new FissionPacket(tileEntity.getPos(), 2);
+					fission.encode(packet);
+					
+					FissionPacketHandler.sendPacket((ServerPlayerEntity)playerEntity, packet);
+				}
+			}
+		}
 	}
 
 	@Override
